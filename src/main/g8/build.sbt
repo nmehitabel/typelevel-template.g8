@@ -4,6 +4,7 @@ val shapelessV = "2.3.3"
 val fs2V = "2.0.0"
 val http4sV = "0.21.0-M6"
 val circeV = "0.12.3"
+val circeAuxV = "0.12.0"
 val doobieV = "0.8.8"
 val log4catsV = "1.0.1"
 val catsEffectTestingV = "0.4.0"
@@ -13,8 +14,6 @@ val betterMonadicForV = "0.3.1"
 
 // Projects
 lazy val `$name$` = project.in(file("."))
-  .disablePlugins(MimaPlugin)
-  .enablePlugins(NoPublishPlugin)
   .aggregate(core)
 
 lazy val core = project.in(file("core"))
@@ -23,54 +22,6 @@ lazy val core = project.in(file("core"))
     name := "$name$"
   )
 
-lazy val site = project.in(file("site"))
-  .disablePlugins(MimaPlugin)
-  .enablePlugins(MicrositesPlugin)
-  .enablePlugins(MdocPlugin)
-  .enablePlugins(NoPublishPlugin)
-  .settings(commonSettings)
-  .dependsOn(core)
-  .settings{
-    import microsites._
-    Seq(
-      micrositeName := "$name$",
-      micrositeDescription := "$project_description$",
-      micrositeAuthor := "$contributorName$",
-      micrositeGithubOwner := "$contributorUsername$",
-      micrositeGithubRepo := "$name$",
-      micrositeBaseUrl := "/$name$",
-      micrositeDocumentationUrl := "https://www.javadoc.io/doc/$organization$/$name$_2.12",
-      micrositeGitterChannelUrl := "$contributorUsername$/libraries", // Feel Free to Set To Something Else
-      micrositeFooterText := None,
-      micrositeHighlightTheme := "atom-one-light",
-      micrositePalette := Map(
-        "brand-primary" -> "#3e5b95",
-        "brand-secondary" -> "#294066",
-        "brand-tertiary" -> "#2d5799",
-        "gray-dark" -> "#49494B",
-        "gray" -> "#7B7B7E",
-        "gray-light" -> "#E5E5E6",
-        "gray-lighter" -> "#F4F3F4",
-        "white-color" -> "#FFFFFF"
-      ),
-      micrositeCompilingDocsTool := WithMdoc,
-      scalacOptions in Tut --= Seq(
-        "-Xfatal-warnings",
-        "-Ywarn-unused-import",
-        "-Ywarn-numeric-widen",
-        "-Ywarn-dead-code",
-        "-Ywarn-unused:imports",
-        "-Xlint:-missing-interpolator,_"
-      ),
-      libraryDependencies += "com.47deg" %% "github4s" % "0.20.1",
-      micrositePushSiteWith := GitHub4s,
-      micrositeGithubToken := sys.env.get("GITHUB_TOKEN"),
-      micrositeExtraMdFiles := Map(
-          file("CODE_OF_CONDUCT.md")  -> ExtraMdFileConfig("code-of-conduct.md",   "page", Map("title" -> "code of conduct",   "section" -> "code of conduct",   "position" -> "100")),
-          file("LICENSE")             -> ExtraMdFileConfig("license.md",   "page", Map("title" -> "license",   "section" -> "license",   "position" -> "101"))
-      )
-    )
-  }
 
 // General Settings
 lazy val commonSettings = Seq(
@@ -99,6 +50,8 @@ lazy val commonSettings = Seq(
     "io.circe"                    %% "circe-core"                    % circeV,
     "io.circe"                    %% "circe-generic"                 % circeV,
     "io.circe"                    %% "circe-parser"                  % circeV,
+    "io.circe"                    %% "circe-fs2"                     % circeAuxV,
+    "io.circe"                    %% "circe-optics"                  % circeAuxV,
 
     "org.tpolecat"                %% "doobie-core"                   % doobieV,
     "org.tpolecat"                %% "doobie-h2"                     % doobieV,
@@ -110,7 +63,8 @@ lazy val commonSettings = Seq(
     "io.chrisdavenport"           %% "log4cats-slf4j"                % log4catsV,
     "io.chrisdavenport"           %% "log4cats-testing"              % log4catsV          % Test,
 
-    "com.codecommit"              %% "cats-effect-testing-scalatest" % catsEffectTestingV % Test
+    "com.codecommit"              %% "cats-effect-testing-scalatest" % catsEffectTestingV % Test,
+    "com.codecommit"              %% "cats-effect-testing-scalatest-scalacheck" % catsEffectTestingV % Test
   )
 )
 
@@ -119,15 +73,5 @@ inThisBuild(List(
   organization := "$organization$",
   developers := List(
     Developer("$contributorUsername$", "$contributorName$", "$contributorEmail$", url("https://github.com/$contributorUsername$"))
-  ),
-
-  homepage := Some(url("https://github.com/$contributorUsername$/$name$")),
-  licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
-
-  pomIncludeRepository := { _ => false},
-  scalacOptions in (Compile, doc) ++= Seq(
-      "-groups",
-      "-sourcepath", (baseDirectory in LocalRootProject).value.getAbsolutePath,
-      "-doc-source-url", "https://github.com/$contributorUsername$/$name$/blob/v" + version.value + "€{FILE_PATH}.scala"
   )
 ))

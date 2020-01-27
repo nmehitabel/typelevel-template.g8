@@ -1,7 +1,8 @@
 package $package$
 
 import cats.data.EitherT
-import cats.effect.testing.scalatest.AsyncIOSpec
+import cats.effect.testing.scalatest._
+import cats.effect.testing.scalatest.scalacheck.EffectCheckerAsserting
 import cats.effect.{IO, Sync}
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.{CheckerAsserting, ScalaCheckPropertyChecks}

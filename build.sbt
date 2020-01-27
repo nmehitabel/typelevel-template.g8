@@ -10,6 +10,7 @@ val log4catsV = "1.0.1"
 val scalatestV = "3.1.0"
 val scalacheckV = "1.14.1"
 val catsEffectTestingV = "0.4.0"
+
 val kindProjectorV = "0.11.0"
 val betterMonadicForV = "0.3.1"
 
@@ -54,15 +55,14 @@ lazy val root = (project in file("."))
       "org.tpolecat"                %% "doobie-h2"                     % doobieV,
       "org.tpolecat"                %% "doobie-hikari"                 % doobieV,
       "org.tpolecat"                %% "doobie-postgres"               % doobieV,
-      "org.tpolecat"                %% "doobie-scalatest"              % doobieV              % Test,
+      "org.tpolecat"                %% "doobie-scalatest"              % doobieV            % Test,
    
       "io.chrisdavenport"           %% "log4cats-core"                 % log4catsV,
       "io.chrisdavenport"           %% "log4cats-slf4j"                % log4catsV,
-      "io.chrisdavenport"           %% "log4cats-testing"              % log4catsV            % Test,
+      "io.chrisdavenport"           %% "log4cats-testing"              % log4catsV          % Test,
 
-      "com.codecommit"              %% "cats-effect-testing-scalatest" % "catsEffectTestingV" % "Test"
-      "org.scalatest"               %% "scalatest"                     % "scalatestV"         % "Test",
-      "org.scalacheck"              %% "scalacheck"                    % "scalacheckV"        % "Test"
+      "com.codecommit"              %% "cats-effect-testing-scalatest" % catsEffectTestingV % Test,
+      "com.codecommit"              %% "cats-effect-testing-scalatest-scalacheck" % catsEffectTestingV % Test
     )
   )
 
